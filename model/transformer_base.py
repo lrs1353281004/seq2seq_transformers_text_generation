@@ -16,13 +16,18 @@ class PositionalEncoding(nn.Module):
         x = x + self.pe[:x.size(0), :]
         return self.dropout(x)
 class transformer_base(nn.Module):
-    def __init__(self,vocab_size):
+    def __init__(self,vocab_size,dim=512,nhead=16,load_pretrain=''):
         super().__init__()
         self.vocab_size=vocab_size
-        self.embedding=nn.Embedding(self.vocab_size,512)
-        self.PE=PositionalEncoding(512)
-        self.transformer=nn.Transformer(nhead=16, num_encoder_layers=12)
-        self.lr_2_vocab=nn.Linear(512,self.vocab_size)
+        if load_pretrain:
+            print('load pretrained embedding in:{} \n'.format(load_pretrain))
+            self.embedding=nn.Embedding.from_pretrained(torch.load(load_pretrain))
+            self.embedding.requires_grad_=True
+        else:
+            self.embedding=nn.Embedding(self.vocab_size,dim)
+        self.PE=PositionalEncoding(dim)
+        self.transformer=nn.Transformer(d_model=dim ,nhead=nhead, num_encoder_layers=12)
+        self.lr_2_vocab=nn.Linear(dim,self.vocab_size)
     def forward(self,src_ids,tgt_ids,src_pad_mask=None,tgt_pad_mask=None,tgt_mask=None):
         src = self.embedding(src_ids)
         tgt = self.embedding(tgt_ids)
@@ -51,6 +56,6 @@ if __name__=="__main__":
         src_batch,tgt_batch,src_pad_batch,tgt_pad_batch,tgt_mask_batch=batch['src_ids'],batch['tgt_ids'],batch['src_pad_mask'],batch['tgt_pad_mask'],batch['tgt_mask']
         break
     ##
-    model=transformer_base(tokenizer.vocab_size)
+    model=transformer_base(tokenizer.vocab_size,300,15,os.path.join(CURRENT_PATH,'../data/pretrained_embed.pkl')) #,os.path.join(CURRENT_PATH,'../data/pretrained_embed.pkl')
     out=model(src_batch,tgt_batch,src_pad_batch,tgt_pad_batch,tgt_mask_batch)
     print(out.shape)

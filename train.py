@@ -30,6 +30,9 @@ def Train(args):
     check_steps=args['check_steps']
     save_steps =args['save_steps']
     os.environ['CUDA_VISIBLE_DEVICES'] = args['GPU_ids']
+    embed_path= args['embed_path']
+    embed_dim = args['embed_dim']
+    nheads = args['nheads_transformer']
     #########
     if not os.path.exists(log_path):
         os.makedirs(log_path)
@@ -72,7 +75,7 @@ def Train(args):
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    model = transformer_base(tokenizer.vocab_size)
+    model = transformer_base(tokenizer.vocab_size,embed_dim,nheads,embed_path)
     model.to(device)
 
     if resume != 0:
@@ -183,16 +186,19 @@ if __name__ == "__main__":
         'history_path':'./history/',
         'log_path':'./log/',
         'vocab_path':'./data/basic_vocab.txt',
+        'embed_path':'./data/pretrained_embed.pkl',   # default: ''
+        'embed_dim':300, # default: 512
+        'nheads_transformer':15, # embed_dim % nheads_transformer == 0
         'resume':0,
-        'model_save_name':'trans_lccc_v2',
+        'model_save_name':'trans_lccc_v333',
         'model_resume_name':'',
-        'batch_size':100,
+        'batch_size':64,
         'end_epoch':10,
         'check_steps':20000,
         'save_steps':50000,
         'lr':1e-4,
         'loss_check':300,
-        'version_info':'loss decay slower than v1',
-        'GPU_ids':'2'
+        'version_info':'use pretrained embed',
+        'GPU_ids':'0'
     }
     Train(args)
