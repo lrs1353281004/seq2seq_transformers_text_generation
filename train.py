@@ -29,6 +29,7 @@ def Train(args):
     loss_check_freq = args['loss_check']
     check_steps=args['check_steps']
     save_steps =args['save_steps']
+    os.environ['CUDA_VISIBLE_DEVICES'] = args['GPU_ids']
     #########
     if not os.path.exists(log_path):
         os.makedirs(log_path)
@@ -88,7 +89,7 @@ def Train(args):
 
     criterion = seq_generation_loss(device=device).to(device)
     optim = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=lr) #weight_decay=1e-5
-    scheduler = StepLR(optim, step_size=5, gamma=0.7)
+    scheduler = StepLR(optim, step_size=5, gamma=0.9)
 
     steps_cnt=0
     for epoch in range(start_epoch+1,end_epoch):
@@ -183,13 +184,15 @@ if __name__ == "__main__":
         'log_path':'./log/',
         'vocab_path':'./data/basic_vocab.txt',
         'resume':0,
-        'model_save_name':'trans_lccc_v1',
+        'model_save_name':'trans_lccc_v2',
         'model_resume_name':'',
-        'batch_size':64,
+        'batch_size':100,
         'end_epoch':10,
         'check_steps':20000,
         'save_steps':50000,
         'lr':1e-4,
-        'loss_check':300
+        'loss_check':300,
+        'version_info':'loss decay slower than v1',
+        'GPU_ids':'2'
     }
     Train(args)
