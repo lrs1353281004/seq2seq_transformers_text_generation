@@ -16,7 +16,7 @@ class dialogue_dataset(Dataset):
         return len(self.data)
     def __getitem__(self, index):
         q,a = self.data[index]
-        sample = {'q_token':self.tokenizer.tokenize(list(q)) ,'a_token':self.tokenizer.tokenize(['[START]']+list(q)+['[END]'])}
+        sample = {'q_token':self.tokenizer.tokenize(list(q.strip())) ,'a_token':self.tokenizer.tokenize(['[START]']+list(a.strip())+['[END]'])}
         return sample
 def collate_func(batch_dic):
     from torch.nn.utils.rnn import pad_sequence
