@@ -123,7 +123,7 @@ def Train(args):
                 print('batch:%d' % (batch_idx))
                 print('loss:%f' % (loss.item()))
             
-            if steps_cnt%check_steps == 1000:
+            if steps_cnt%check_steps == 0:
                 loss_tr  /= local_steps_cnt
                 print('trainset loss:%f' % (loss_tr))
                 logger.info('trainset loss:%f' % (loss_tr))
@@ -171,7 +171,7 @@ def Train(args):
                         torch.save(model.state_dict(), model_ckpt_name)
                 scheduler.step()
                 logger.info("current lr:%f" % (scheduler.get_last_lr()[0]))
-            if steps_cnt%save_steps==1000:
+            if steps_cnt%save_steps==0:
                 logger.info('match save steps,Checkpoint Saving...')
                 torch.save(model.state_dict(), os.path.join(checkpoint_path, model_name + '_steps_'+str(steps_cnt)+'.pkl'))
 if __name__ == "__main__":
@@ -183,13 +183,13 @@ if __name__ == "__main__":
         'log_path':'./log/',
         'vocab_path':'./data/basic_vocab.txt',
         'resume':0,
-        'model_save_name':'trans_lccc_v2',
+        'model_save_name':'trans_lccc_v1',
         'model_resume_name':'',
         'batch_size':64,
         'end_epoch':10,
         'check_steps':20000,
         'save_steps':50000,
-        'lr':2e-4,
-        'loss_check':30
+        'lr':1e-4,
+        'loss_check':300
     }
     Train(args)
