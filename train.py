@@ -166,7 +166,7 @@ def Train(args):
                         print('best loss so far! Checkpoint Saving...')
                         state = {
                             'epoch': epoch ,
-                            'val_loss':loss_va,
+                            'loss':loss_va,
                             'history': history
                         }
                         torch.save(state, checkpoint_name)
@@ -175,13 +175,14 @@ def Train(args):
                         torch.save(model.state_dict(), model_ckpt_name)
                 scheduler.step()
                 logger.info("current lr:%f" % (scheduler.get_last_lr()[0]))
+                model.train()
             if steps_cnt%save_steps==0:
                 logger.info('match save steps,Checkpoint Saving...')
                 torch.save(model.state_dict(), os.path.join(checkpoint_path, model_name + '_steps_'+str(steps_cnt)+'.pkl'))
 if __name__ == "__main__":
     args={
-        'trainset_path':'./data/LCCC_base/train',
-        'testset_path':'./data/LCCC_base/test',
+        'trainset_path':'./data/xiaohuangji/train',
+        'testset_path':'./data/xiaohuangji/valid',
         'checkpoint_path':'./ckpt/',
         'history_path':'./history/',
         'log_path':'./log/',
@@ -190,15 +191,15 @@ if __name__ == "__main__":
         'embed_dim':300, # default: 512
         'nheads_transformer':15, # embed_dim % nheads_transformer == 0
         'resume':0,
-        'model_save_name':'trans_lccc_v333',
+        'model_save_name':'trans_xhj_v2',
         'model_resume_name':'',
         'batch_size':64,
-        'end_epoch':10,
-        'check_steps':20000,
-        'save_steps':50000,
+        'end_epoch':20,
+        'check_steps':2000,
+        'save_steps':5000,
         'lr':1e-4,
         'loss_check':300,
-        'version_info':'use pretrained embed',
-        'GPU_ids':'0'
+        'version_info':'use pretrained embed , encode_layers=6 model.train() revise',
+        'GPU_ids':'4'
     }
     Train(args)
