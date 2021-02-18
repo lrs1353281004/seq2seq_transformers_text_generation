@@ -4,8 +4,8 @@ python 3.6
 pytorch 1.6.0+cu101
 
 ## 项目说明
-基于transformer的文本生成问题pipeline。（基于闲聊模型进行训练和测试）
-训练方式为teacher forcing。
+基于transformer的文本生成问题pipeline。（基于对话数据进行闲聊模型训练和测试）
+训练方式为teacher forcing（基于下三角mask实现，具体可参考loss部分代码）。
 
 ## 模型训练
 python train.py
