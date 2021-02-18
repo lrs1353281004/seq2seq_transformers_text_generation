@@ -31,7 +31,7 @@ encode_layers=6
 
 训练到16个epoch（大约200万+steps，耗时约10天）
 
-
+![image](https://github.com/lrs1353281004/seq_2_seq_transformers_text_generation/blob/master/pics/training_example.png)
 
 
 
