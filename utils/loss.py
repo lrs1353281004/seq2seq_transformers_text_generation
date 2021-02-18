@@ -35,13 +35,15 @@ class seq_generation_loss(nn.Module):
 
         return loss
 if __name__=="__main__":
+    import os
+    CURRENT_PATH=os.path.dirname(os.path.abspath(__file__))
     import sys
-    sys.path.append('/search/odin/liruosong/my_land/seq_2_seq_text_generation')
+    sys.path.append(os.path.join(CURRENT_PATH,'../'))
     from utils.tokenizer import basic_tokenizer
     from utils.dialogue_dataset import dialogue_dataset,collate_func
     from model.transformer_base import transformer_base
-    tokenizer=basic_tokenizer('/search/odin/liruosong/my_land/seq_2_seq_text_generation/data/basic_vocab.txt')
-    dataset = dialogue_dataset("/search/odin/liruosong/my_land/seq_2_seq_text_generation/data/LCCC_base/test",tokenizer)
+    tokenizer=basic_tokenizer(os.path.join(CURRENT_PATH,"../data/basic_vocab.txt"))
+    dataset = dialogue_dataset(os.path.join(CURRENT_PATH,"../data/LCCC_base/test"),tokenizer)
     batch_size=10
     from torch.utils.data import DataLoader
     from tqdm import tqdm
